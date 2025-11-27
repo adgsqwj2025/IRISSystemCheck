@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRISSystemCheck</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ITEM</h1>
+            <div class="nav-buttons">
+                <button id="showDashboard">Main Page</button>
+                <button id="showConfig" class="secondary">Configuration Page</button>
+            </div>
+        </header>
+
+        <!-- 主页面 -->
+        <div id="dashboardPage" class="dashboard-page">
+            <div class="dashboard" id="dashboard">
+                <!-- 动态生成的组件将在这里显示 -->
+                <div class="empty-state">
+                    <p>No configured display items available</p>
+                    <p>Please go to the configuration page to add display items</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 配置页面 -->
+        <div id="configPage" class="config-page">
+            <div class="config-section">
+          
+                <h2 id="formTitle">Add Item</h2>
+                <div id="editModeIndicator" class="edit-mode-indicator" style="display: none;">
+                    Editing: <span id="editingWidgetTitle"></span>
+                </div>
+                <form id="widgetForm">
+                    <input type="hidden" id="widgetId">
+                    <div class="form-group">
+                        <label for="widgetTitle">title</label>
+                        <input type="text" id="widgetTitle" placeholder="" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="widgetType">Type</label>
+                        <select id="widgetType">
+                            <option value="data">Date</option>
+                            <option value="list">List</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="apiUrl">APIURL</label>
+                        <input type="text" id="apiUrl" placeholder="" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="apiMethod">Method</label>
+                        <select id="apiMethod">
+                            <option value="GET">GET</option>
+                            <option value="POST">POST</option>
+                            <option value="PUT">PUT</option>
+                            <option value="DELETE">DELETE</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="apiHeaders">Header (JSON format)</label>
+                        <textarea id="apiHeaders" placeholder='{"Content-Type": "application/json"}'></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="apiBody">BODY (JSON format, only POST/PUT requests)</label>
+                        <textarea id="apiBody" placeholder='{"param1": "value1"}'></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="refreshInterval">Refresh interval (minutes, 0 indicates no automatic refresh)</label>
+                        <input type="number" id="refreshInterval" min="0" value="0">
+                    </div>
+                    <div class="toggle-container">
+                        <label for="widgetEnabled">Enable display items</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="widgetEnabled" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" id="submitButton">ADD</button>
+                        <button type="button" id="cancelEdit" class="secondary" style="display: none;">CANCLE</button>
+                        <button type="button" id="testApi" class="test-api-btn">TESTAPI</button>
+                    </div>
+                </form>
+                <div id="apiTestResult" class="api-result" style="display: none;"></div>
+            </div>
+
+            <div class="config-section">
+                <h2>The configured display items</h2>
+                <div class="widget-list" id="widgetList">
+                    <!-- 动态生成的已配置项将在这里显示 -->
+                    <div class="empty-state">
+                        <p>There are currently no configured display items available</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="config-section">
+                <h2>Configuration Preview</h2>
+                <div class="json-preview" id="configPreview">
+                    <!-- 配置预览将在这里显示 -->
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+          
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+  <Document name="irissystemcheck.ZPM">
+    <Module>
+      <Name>irissystemcheck</Name>
+      <Version>1.0.0</Version>
+      <Packaging>module</Packaging>
+      <Resource Name="IRISSyetemCheck.PKG"/>
+      <Invokes>
+        <Invoke Class="IRISSyetemCheck.Util.Setting" Method="initialization" Phase="Activate" When="After" ></Invoke>
+      </Invokes>
+      <SourcesRoot>src</SourcesRoot>
+    </Module>
+  </Document>
+</Export>

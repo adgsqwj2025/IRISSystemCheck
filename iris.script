@@ -1,0 +1,5 @@
+     
+     zn "USER"
+     zpm "load /opt/IRISSystemCheck"  
+     exit
+     halt
