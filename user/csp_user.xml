@@ -1,36 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="IRIS" version="26" zv="IRIS for Windows (x86-64) 2020.2 (Build 199U)" ts="2025-11-27 09:40:35">
 <CSP name="script.js" application="/csp/user/"><![CDATA[
-// 默认配置
+
 const defaultConfig = {
     widgets: []
 };
 
-// 当前编辑的组件ID
+
 let editingWidgetId = null;
 
-// 获取配置
+
 async function getConfig() {
-    const response = await fetch("http://"+window.location.host+":52773/api/SystemCheck/widgets", {});
+     let response = await fetch("http://"+window.location.host+"/api/SystemCheck/widgets", {});
             
     if (!response.ok) {
         console.log(response);
     }
-    
-    const config = await response.text();
+    let config = await response.text();
+    console.log(config)
+     console.log(config.includes("{}"))
+    if(config.includes("{}"))
+    {
+	   
+	      const option = {method: "POST", mode: "no-cors", body: window.location.host};
+	      let response2 = await fetch("http://"+window.location.host+"/api/SystemCheck/initialization", option);
+	      config = await response2.text();
+	    
+	}
+   
     return JSON.parse(config);
 }
 
-// 保存配置
+
 function saveConfig(config) {
     Currenconfig = config;
 
     const option = {method: "POST", mode: "no-cors", body: JSON.stringify(config)};
-    fetch("http://"+window.location.host+":52773/api/SystemCheck/savewidgets", option);
+    fetch("http://"+window.location.host+"/api/SystemCheck/savewidgets", option);
     updateConfigPreview();
 }
 
-// 更新配置预览
+
 function updateConfigPreview() {
     getConfig().then(result => {
         const config = result;
@@ -38,12 +48,12 @@ function updateConfigPreview() {
     });
 }
 
-// 生成唯一ID
+
 function generateId() {
     return 'widget_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 }
 
-// 添加展示项
+
 function addWidget(widgetData) {
     getConfig().then(result => {
         const config = result;
@@ -67,7 +77,6 @@ function addWidget(widgetData) {
     });
 }
 
-// 更新展示项
 function updateWidget(widgetId, widgetData) {
     getConfig().then(result => {
         const config = result;
@@ -87,7 +96,7 @@ function updateWidget(widgetId, widgetData) {
     });
 }
 
-// 删除展示项
+
 function deleteWidget(widgetId) {
     getConfig().then(result => {
         const config = result;
@@ -97,7 +106,7 @@ function deleteWidget(widgetId) {
     });
 }
 
-// 切换展示项状态
+
 function toggleWidget(widgetId) {
     getConfig().then(result => {
         const config = result;
@@ -110,7 +119,7 @@ function toggleWidget(widgetId) {
     });
 }
 
-// 渲染展示项列表
+
 function renderWidgetList() {
     getConfig().then(result => {
         const config = result;
@@ -141,7 +150,7 @@ function renderWidgetList() {
             </div>
         `).join('');
         
-        // 添加事件监听器
+      
         document.querySelectorAll('.delete-widget').forEach(button => {
             button.addEventListener('click', function(e) {
                 e.stopPropagation();
@@ -166,7 +175,7 @@ function renderWidgetList() {
             });
         });
         
-        // 点击整个widget项也可以编辑
+    
         document.querySelectorAll('.widget-item').forEach(item => {
             item.addEventListener('click', function() {
                 const widgetId = this.getAttribute('data-id');
@@ -176,17 +185,17 @@ function renderWidgetList() {
     });
 }
 
-// 编辑展示项
+
 function editWidget(widgetId) {
     getConfig().then(result => {
         const config = result;
         const widget = config.widgets.find(w => w.id === widgetId);
         
         if (widget) {
-            // 设置编辑模式
+         
             editingWidgetId = widgetId;
             
-            // 填充表单
+         
             document.getElementById('widgetId').value = widget.id;
             document.getElementById('widgetTitle').value = widget.title;
             document.getElementById('widgetType').value = widget.type;
@@ -197,23 +206,24 @@ function editWidget(widgetId) {
             document.getElementById('refreshInterval').value = widget.refreshInterval;
             document.getElementById('widgetEnabled').checked = widget.enabled;
             
-            // 更新UI为编辑模式
+        
+
             document.getElementById('formTitle').textContent = 'edit item';
             document.getElementById('submitButton').textContent = 'update item';
             document.getElementById('cancelEdit').style.display = 'inline-block';
             document.getElementById('editModeIndicator').style.display = 'block';
             document.getElementById('editingWidgetTitle').textContent = widget.title;
             
-            // 重新渲染列表以高亮正在编辑的项
+       
             renderWidgetList();
             
-            // 滚动到表单顶部
+    
             document.getElementById('widgetForm').scrollIntoView({ behavior: 'smooth' });
         }
     });
 }
 
-// 重置表单
+
 function resetForm() {
     editingWidgetId = null;
     document.getElementById('widgetForm').reset();
@@ -224,17 +234,19 @@ function resetForm() {
     document.getElementById('editModeIndicator').style.display = 'none';
     document.getElementById('apiTestResult').style.display = 'none';
     
-    // 重新渲染列表以取消高亮
+
     renderWidgetList();
 }
 
-// 渲染主页面
+
+
 function renderDashboard() {
     getConfig().then(result => {
         const config = result;
         const dashboard = document.getElementById('dashboard');
         
-        // 过滤出已启用的展示项
+
+
         const enabledWidgets = config.widgets.filter(widget => widget.enabled);
         
         if (enabledWidgets.length === 0) {
@@ -259,11 +271,13 @@ function renderDashboard() {
             </div>
         `).join('');
         
-        // 为每个展示项加载数据
+     
+
         enabledWidgets.forEach(widget => {
             loadWidgetData(widget);
             
-            // 如果设置了刷新间隔，设置定时器
+    
+
             if (widget.refreshInterval > 0) {
                 setInterval(() => {
                     loadWidgetData(widget);
@@ -273,26 +287,28 @@ function renderDashboard() {
     });
 }
 
-// 加载展示项数据
+
+
 async function loadWidgetData(widget) {
     const widgetElement = document.getElementById(widget.id);
     const contentElement = widgetElement.querySelector('.widget-content');
     
     try {
-        // 准备请求参数
+        
+
         const options = {
             method: widget.apiMethod,
             headers: widget.apiHeaders ? JSON.parse(widget.apiHeaders) : {}
         };
         
-        // 如果是POST或PUT请求，添加请求体
+     
         if (['POST', 'PUT'].includes(widget.apiMethod) && widget.apiBody) {
             options.body = widget.apiBody;
         }
         
         let data;
         
-        // 直接请求
+      
         const response = await fetch(widget.apiUrl, options);
         
         if (!response.ok) {
@@ -300,8 +316,7 @@ async function loadWidgetData(widget) {
         }
         
         data = await response.text();
-        
-        // 根据展示项类型渲染数据
+   
         renderWidgetContent(contentElement, widget.type, data);
         
     } catch (error) {
@@ -315,11 +330,11 @@ async function loadWidgetData(widget) {
     }
 }
 
-// 根据类型渲染展示项内容
+
 function renderWidgetContent(element, type, data) {
     switch(type) {
         case 'data':
-            // 如果是数组，取第一个元素展示
+      
             if (Array.isArray(data) && data.length > 0) {
                 const firstItem = data[0];
                 element.innerHTML = `
