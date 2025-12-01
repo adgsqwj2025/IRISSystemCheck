@@ -8,6 +8,8 @@ XData UrlMap [ XMLNamespace = "http://www.systemCheck.com/urlmap" ]
 <Routes>
   <Route Url="/widgets" Method="GET" Call="Widgets"/>
   <Route Url="/savewidgets" Method="POST" Call="SaveWidgets"/>
+   <Route Url="/initialization" Method="POST" Call="initialization"/>
+ 
 
   <Route Url="/*" Method="Options" Call="Status"/>
   <Route Url="/:Method" Method="Get" Call="SystemCheck"/>
@@ -32,6 +34,8 @@ ClassMethod SystemCheck(method As %String) As %Status
 			Set status=..VirtualIP(.pOutput)
 		}elseif(method="MirrorDatabase"){
 			Set status=..MirrorDatabase(.pOutput)
+		}elseif(method="GlobalBuffer"){
+			Set status=..GlobalBuffer(.pOutput)
 		}elseif(method="GlobalBuffer"){
 			Set status=..GlobalBuffer(.pOutput)
 		}else{
@@ -147,7 +151,7 @@ ClassMethod Failure(pRequest As %RegisteredObject) As %String
 ClassMethod Widgets()
 {
 
-	
+
 	
 	//set ^temp1125="**"
 	w ^widgtconfig,!
@@ -157,9 +161,20 @@ ClassMethod Widgets()
 ClassMethod SaveWidgets()
 {
   set ^widgtconfig=%request.Content.Read()
-  
-  Quit $$$OK
+}
+
+ClassMethod initialization() As %Status
+{
+	set ip=%request.Content.Read()
+	   if (^widgtconfig="{}")&&(^widgtconfig("flag")=0)
+   {
+	   set ip=$p(ip,":",1)
+	   	set temp={"widgets":[{"id":"widget_1764129069307_2my29quxt","title":"LargePagesEnabled","type":"data","apiUrl":"http://localhost:52773/api/SystemCheck/LargePagesEnabled","apiMethod":"GET","apiHeaders":"","apiBody":"","refreshInterval":0,"enabled":true,"createdAt":"2025-11-26T03:51:09.307Z"},{"id":"widget_1764129217300_amd75jtsc","title":"ProcessMemory","type":"data","apiUrl":"http://localhost:52773/api/SystemCheck/ProcessMemory","apiMethod":"GET","apiHeaders":"","apiBody":"","refreshInterval":0,"enabled":true,"createdAt":"2025-11-26T03:53:37.301Z"},{"id":"widget_1764129319496_zwdz3cw4s","title":"VirtualIP","type":"data","apiUrl":"http://localhost:52773/api/SystemCheck/VirtualIP","apiMethod":"GET","apiHeaders":"","apiBody":"","refreshInterval":0,"enabled":true,"createdAt":"2025-11-26T03:55:19.496Z"},{"id":"widget_1764129434034_bvusdsv2j","title":"MirrorDatabase","type":"data","apiUrl":"http://localhost:52773/api/SystemCheck/MirrorDatabase","apiMethod":"GET","apiHeaders":"","apiBody":"","refreshInterval":0,"enabled":true,"createdAt":"2025-11-26T03:57:14.034Z"},{"id":"widget_1764129444544_o9v15ketu","title":"GlobalBuffer","type":"data","apiUrl":"http://localhost:52773/api/SystemCheck/GlobalBuffer","apiMethod":"GET","apiHeaders":"","apiBody":"","refreshInterval":0,"enabled":true,"createdAt":"2025-11-26T03:57:24.544Z"}]}
+	    set ^widgtconfig=$replace(temp.%ToJSON(),"localhost",ip)
+	    set ^widgtconfig("flag")=1
+   }
+	w ^widgtconfig,!
+	 Quit $$$OK
 }
 
 }
-
