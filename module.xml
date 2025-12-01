@@ -3,13 +3,15 @@
   <Document name="irissystemcheck.ZPM">
     <Module>
       <Name>irissystemcheck</Name>
-      <Version>1.0.0</Version>
+      <Version>1.0.1</Version>
       <Packaging>module</Packaging>
-      <Resource Name="IRISSyetemCheck.PKG"/>
+      <Resource Name="IRISSyetemCheck.PKG"/>
+
       <Invokes>
         <Invoke Class="IRISSyetemCheck.Util.Setting" Method="initialization" Phase="Activate" When="After" ></Invoke>
       </Invokes>
       <SourcesRoot>src</SourcesRoot>
     </Module>
   </Document>
+
 </Export>
