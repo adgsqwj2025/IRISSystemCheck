@@ -8,7 +8,7 @@ ClassMethod initialization() As %Status
 
 	set ns=$namespace
 	Do $SYSTEM.OBJ.Export("IRISSyetemCheck.Interface.Rest.cls",$SYSTEM.Util.InstallDirectory()_"systemcheck.xml")
-
+    d $system.OBJ.CompileList("/csp/user/index.csp")
 
  
 	zn "%SYS"
