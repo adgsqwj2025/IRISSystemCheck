@@ -3,7 +3,7 @@
   <Document name="irissystemcheck.ZPM">
     <Module>
       <Name>irissystemcheck</Name>
-      <Version>1.0.1</Version>
+      <Version>1.0.2</Version>
       <Packaging>module</Packaging>
       <Resource Name="IRISSyetemCheck.PKG"/>
 
@@ -15,3 +15,4 @@
   </Document>
 
 </Export>
+
